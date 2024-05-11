@@ -1,9 +1,21 @@
+variable "istest" {
+    default = false
+}
+variable "users" {
+   type = list(string)
+   default = ["testuser","produser","devuser"]
+}
+
 variable "sg-name" {
     type = list
 }
 
 variable "vm-tag" {
     type = map
+    default = {
+      name = "check"
+      env = "dev"
+    }
 }
 
 variable "cidr" {
