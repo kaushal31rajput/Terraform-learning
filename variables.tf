@@ -1,26 +1,26 @@
 variable "istest" {
-    default = false
+  default = false
 }
 variable "users" {
-   type = list(string)
-   default = ["testuser","produser","devuser"]
+  type    = list(string)
+  default = ["testuser", "produser", "devuser"]
 }
 
 variable "sg-name" {
-    type = list
+  type = list(any)
 }
 
 variable "vm-tag" {
-    type = map
-    default = {
-      name = "check"
-      env = "dev"
-    }
+  type = map(any)
+  default = {
+    name = "check"
+    env  = "dev"
+  }
 }
 
 variable "cidr" {
-   default = "192.168.0.0/16"
-    description = "This is internal IP for VM communication, its being used in SG"
+  default     = "192.168.0.0/16"
+  description = "This is internal IP for VM communication, its being used in SG"
 }
 
 variable "ami" {
@@ -28,17 +28,17 @@ variable "ami" {
 }
 
 variable "ssh-port" {
-   default = 22
+  default = 22
 }
 
 variable "https-port" {
-   default = 443
+  default = 443
 }
 
 variable "http-port" {
-   default = 80
+  default = 80
 }
 
 variable "ftp-port" {
-   default = 21
+  default = 21
 }

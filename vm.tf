@@ -1,13 +1,32 @@
-locals {
-   count = var.istest == true ? 1 : 0
-}
-resource "aws_instance" "test-vm" {
-    ami = "ami-0e159fc62d940d348"
-    instance_type = "t2.micro"
+# locals {
+#   count = var.istest == true ? 1 : 0
+# }
+resource "aws_instance" "test-vm1" {
+  ami           = "ami-0e159fc62d940d348"
+  instance_type = "t2.micro"
 
-    tags = {
-     Name = "vm-test"
+  tags = {
+    Name = "vm-test"
   }
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  provisioner "local-exec" {
+  command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
+}
+}
+resource "aws_instance" "test-vm2" {
+  ami           = "ami-0e159fc62d940d348"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "vm-test"
+  }
+  lifecycle {
+    prevent_destroy = true
+  }
+  depends_on = [ aws_instance.test-vm1 ]
 }
 # resource "aws_eip" "lb" {
 # instance = aws_instance.test-vm1.id
@@ -28,19 +47,37 @@ resource "aws_instance" "test-vm" {
 #   count = length(var.users)
 # }
 
-resource "aws_iam_user" "test" {
-  for_each = toset(var.users)
-  name =  each.value
-}
 
 # output "test" {
 #   value = "https://${aws_instance.test-vm1.private_ip}"
 # }
 
-data "aws_instances" "name" {
-    filter {
-    name   = "tag:Name"
-    values = ["test"]
+# data "aws_instances" "name" {
+#     filter {
+#     name   = "tag:Name"
+#     values = ["vm-test"]
+#   }
+# }
+
+# output "instance-id" {
+#   value = data.aws_instances.name.ids
+# }
+
+
+
+resource "aws_instance" "test-vm3" {
+  ami           = "ami-0e159fc62d940d348"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "vm-test"
   }
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  provisioner "local-exec" {
+  command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
+}
 }
 
