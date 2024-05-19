@@ -2,3 +2,6 @@
 **/.terraform/*
 *.tfstate
 **/.git/*
+terraform.tfstate.backup
+.terraform.lock.hcl
+key-pair-tf.pem

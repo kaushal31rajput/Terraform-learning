@@ -1,36 +1,56 @@
-# locals {
-#   count = var.istest == true ? 1 : 0
-# }
 resource "aws_instance" "test-vm1" {
   ami           = "ami-0e159fc62d940d348"
   instance_type = "t2.micro"
-
+  key_name = "key-pair-tf"
   tags = {
     Name = "vm-test"
   }
-  lifecycle {
-    prevent_destroy = true
-  }
 
-  provisioner "local-exec" {
-  command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
+connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    private_key = file("key-pair-tf.pem")
+    host     = self.public_ip
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum -y install nginx",
+      "sudo systemctl start nginx",
+    ]
+  }
 }
-}
-resource "aws_instance" "test-vm2" {
-  ami           = "ami-0e159fc62d940d348"
-  instance_type = "t2.micro"
 
-  tags = {
-    Name = "vm-test"
-  }
-  lifecycle {
-    prevent_destroy = true
-  }
-  depends_on = [ aws_instance.test-vm1 ]
-}
-# resource "aws_eip" "lb" {
-# instance = aws_instance.test-vm1.id
+
+
+
+
+# locals {
+#   count = var.istest == true ? 1 : 0
 # }
+# resource "aws_instance" "test-vm1" {
+#   ami           = "ami-0e159fc62d940d348"
+#   instance_type = "t2.micro"
+
+#   tags = {
+#     Name = "vm-test"
+#   }
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+
+#   provisioner "local-exec" {
+#   command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
+# }
+# }
+
+# resource "aws_instance" "test-vm2" {
+#   ami           = "ami-0e159fc62d940d348"
+#   instance_type = "t2.micro"
+#   tags = {
+#     Name = "vm-test"
+#   }
+# }
+
 
 # resource "aws_instance" "dev" {
 #     ami = local.ami
@@ -65,19 +85,19 @@ resource "aws_instance" "test-vm2" {
 
 
 
-resource "aws_instance" "test-vm3" {
-  ami           = "ami-0e159fc62d940d348"
-  instance_type = "t2.micro"
+# resource "aws_instance" "test-vm3" {
+#   ami           = "ami-0e159fc62d940d348"
+#   instance_type = "t2.micro"
 
-  tags = {
-    Name = "vm-test"
-  }
-  lifecycle {
-    prevent_destroy = true
-  }
+#   tags = {
+#     Name = "vm-test"
+#   }
+#   lifecycle {
+#     prevent_destroy = true
+#   }
 
-  provisioner "local-exec" {
-  command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
-}
-}
+#   provisioner "local-exec" {
+#   command = "echo ${aws_instance.test-vm1.private_ip} >> private_ips.txt"
+# }
+# }
 
